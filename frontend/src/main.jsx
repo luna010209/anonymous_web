@@ -1,12 +1,9 @@
-import axios from "axios"
-import { ACCESS_TOKEN } from "./constants"
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
 
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL 
-
-})
-
-api.interceptors.request.use()
-    (config) => {
-        
-    }
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
