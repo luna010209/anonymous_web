@@ -199,3 +199,5 @@ Thumbs.db
 # Django specific
 *.sqlite3
 *.db
+
+backend/.env
