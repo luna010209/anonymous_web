@@ -28,8 +28,3 @@ spring:
     activate:
       on-profile: dev
     import: optional:file:.env.${spring.profiles.active}[.properties]
-
-
-
-
-
