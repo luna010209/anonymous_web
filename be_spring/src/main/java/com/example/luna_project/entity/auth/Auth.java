@@ -26,5 +26,4 @@ public class Auth extends UserAuditable {
 
     @Setter
     private LocalDateTime lastLogin;
-
 }
