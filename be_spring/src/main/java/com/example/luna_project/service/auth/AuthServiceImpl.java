@@ -6,6 +6,7 @@ import com.example.luna_project.config.jwt.TokenProvider;
 import com.example.luna_project.dto.auth.LoginRequest;
 import com.example.luna_project.dto.auth.LoginResponse;
 import com.example.luna_project.dto.auth.SignupRequest;
+import com.example.luna_project.dto.auth.UserInfo;
 import com.example.luna_project.entity.auth.Auth;
 import com.example.luna_project.entity.auth.HistoryLogin;
 import com.example.luna_project.exception.CustomException;
@@ -83,5 +84,18 @@ public class AuthServiceImpl implements AuthService{
         } catch (AuthenticationException e){
             throw new CustomException(HttpStatus.UNAUTHORIZED, "Please check your email/mobile phone or password");
         }
+    }
+
+    @Override
+    public UserInfo userLogin() {
+        String emailOrPhone = SecurityContextHolder.getContext().getAuthentication().getName();
+        Auth user = null;
+        if (authRepo.existsByEmail(emailOrPhone))
+            user = authRepo.findByEmail(emailOrPhone).orElseThrow();
+        else if (authRepo.existsByPhone(emailOrPhone))
+            user = authRepo.findByPhone(emailOrPhone).orElseThrow();
+        if (user == null)
+            throw new CustomException(HttpStatus.NOT_FOUND, "No exist this user");
+        return UserInfo.from(user);
     }
 }
