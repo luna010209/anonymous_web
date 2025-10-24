@@ -31,11 +31,15 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @ResponseBody LoginRequest request,
+            @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse
     ){
-        String ipAddress =
+        String ipAddress = getClientIp(httpServletRequest);
+
+        LoginResponse loginResponse = authService.authenticate(request, ipAddress);
+        httpServletResponse.setHeader("Authorization", "Bearer "+ loginResponse.accessToken());
+        return ResponseEntity.ok(loginResponse);
     }
 
     public String getClientIp(HttpServletRequest request){
