@@ -18,6 +18,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.POST,"/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
                 );
         return http.build();
     }
