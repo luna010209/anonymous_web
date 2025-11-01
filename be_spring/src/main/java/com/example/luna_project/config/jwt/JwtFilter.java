@@ -4,9 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,7 +23,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request);
         String requestURI = request.getRequestURI();
-        if (StringUtils.hasText(jwt) && tokenProvider.)
+        if (StringUtils.hasText(jwt) && tokenProvider.tokenValidate(jwt)){
+            Authentication authentication = tokenProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            logger.debug("Security context: {}, {}", authentication.getName(), requestURI);
+        } else {
+            logger.debug("No JWT exist {}", requestURI);
+        }
+        filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request){
